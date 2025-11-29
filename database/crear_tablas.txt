@@ -1,0 +1,219 @@
+################################################################################
+ESPECIFICACIÓN DE ENTIDADES DE DATOS (SANSPACE)
+Instrucción: Todas las tablas listadas abajo deben incluir OBLIGATORIAMENTE
+los 3 campos de auditoría definidos al inicio.
+################################################################################
+
+--- DEFINICIÓN DE CAMPOS DE AUDITORÍA (ESTÁNDAR) ---
+Al final de CADA tabla, debes agregar estas 3 columnas:
+1. created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+2. updated_at (TIMESTAMP NULL)
+3. is_active (BOOLEAN DEFAULT TRUE)
+
+--------------------------------------------------------------------------------
+--- NIVEL 1: CATÁLOGOS Y ENTIDADES INDEPENDIENTES ---
+
+1. TABLA: roles
+   DESCRIPCIÓN: Define los niveles de autoridad y permisos.
+   ATRIBUTOS PROPIOS:
+   - role_id (PK, SERIAL)
+   - role_name (VARCHAR, UNIQUE)
+   - role_description (TEXT)
+   - role_level (INT)
+   - role_permissions (JSON o TEXT)
+   + CAMPOS DE AUDITORÍA
+
+2. TABLA: departments
+   DESCRIPCIÓN: Áreas funcionales de la empresa.
+   ATRIBUTOS PROPIOS:
+   - department_id (PK, SERIAL)
+   - department_name (VARCHAR)
+   - department_manager_name (VARCHAR)
+   - department_notes (TEXT)
+   + CAMPOS DE AUDITORÍA
+
+3. TABLA: brands
+   DESCRIPCIÓN: Fabricantes de hardware/mobiliario.
+   ATRIBUTOS PROPIOS:
+   - brand_id (PK, SERIAL)
+   - brand_name (VARCHAR)
+   - brand_website (VARCHAR)
+   - brand_support_phone (VARCHAR)
+   + CAMPOS DE AUDITORÍA
+
+4. TABLA: providers
+   DESCRIPCIÓN: Empresas vendedoras (para garantías).
+   ATRIBUTOS PROPIOS:
+   - provider_id (PK, SERIAL)
+   - provider_name (VARCHAR)
+   - provider_rfc (VARCHAR)
+   - provider_contact_name (VARCHAR)
+   - provider_email (VARCHAR)
+   - provider_phone (VARCHAR)
+   - provider_address (VARCHAR)
+   - provider_city (VARCHAR)
+   - provider_state (VARCHAR)
+   - provider_website (VARCHAR)
+   + CAMPOS DE AUDITORÍA
+
+5. TABLA: active_statuses
+   DESCRIPCIÓN: Estado físico/lógico del activo.
+   ATRIBUTOS PROPIOS:
+   - status_id (PK, SERIAL)
+   - status_name (VARCHAR)
+   - status_color_hex (VARCHAR, ej: '#FF0000')
+   + CAMPOS DE AUDITORÍA
+
+6. TABLA: space_types
+   DESCRIPCIÓN: Clasificación de espacios.
+   ATRIBUTOS PROPIOS:
+   - space_type_id (PK, SERIAL)
+   - space_type_name (VARCHAR)
+   - space_type_description (TEXT)
+   - space_type_rules (JSON o TEXT)
+   + CAMPOS DE AUDITORÍA
+
+7. TABLA: buildings
+   DESCRIPCIÓN: Ubicaciones físicas macro.
+   ATRIBUTOS PROPIOS:
+   - building_id (PK, SERIAL)
+   - building_name (VARCHAR)
+   - building_address (VARCHAR)
+   - building_city (VARCHAR)
+   - building_state (VARCHAR)
+   - building_postal_code (VARCHAR)
+   - building_emergency_contact (VARCHAR)
+   - building_latitude (DECIMAL)
+   - building_longitude (DECIMAL)
+   + CAMPOS DE AUDITORÍA
+
+8. TABLA: categories
+   DESCRIPCIÓN: Jerarquía de activos.
+   ATRIBUTOS PROPIOS:
+   - category_id (PK, SERIAL)
+   - category_name (VARCHAR)
+   - category_code (VARCHAR)
+   - category_parent_id (INT, NULLABLE) -> Referencia recursiva
+   + CAMPOS DE AUDITORÍA
+
+--- NIVEL 2: ENTIDADES DEPENDIENTES ---
+
+9. TABLA: users
+   DESCRIPCIÓN: Personas con acceso o responsables de activos.
+   ATRIBUTOS PROPIOS:
+   - user_id (PK, SERIAL)
+   - user_name (VARCHAR)
+   - user_last_name (VARCHAR)
+   - user_email (VARCHAR, UNIQUE)
+   - user_password_hash (VARCHAR)
+   - user_cellphone (VARCHAR)
+   - user_photo_url (VARCHAR)
+   - user_employee_number (VARCHAR)
+   - user_emergency_contact (JSON o TEXT)
+   + CAMPOS DE AUDITORÍA
+
+10. TABLA: models
+    DESCRIPCIÓN: Modelos específicos de una marca.
+    ATRIBUTOS PROPIOS:
+    - model_id (PK, SERIAL)
+    - model_name (VARCHAR)
+    - model_release_year (INT)
+    + CAMPOS DE AUDITORÍA
+
+11. TABLA: floors
+    DESCRIPCIÓN: Niveles dentro de un edificio.
+    ATRIBUTOS PROPIOS:
+    - floor_id (PK, SERIAL)
+    - floor_name (VARCHAR)
+    - floor_number (INT)
+    + CAMPOS DE AUDITORÍA
+
+--- NIVEL 3: ESPACIOS ---
+
+12. TABLA: spaces
+    DESCRIPCIÓN: Habitaciones o áreas específicas.
+    ATRIBUTOS PROPIOS:
+    - space_id (PK, SERIAL)
+    - space_name (VARCHAR)
+    - space_code (VARCHAR, UNIQUE)
+    - space_capacity (INT)
+    - space_square_meters (DECIMAL)
+    - space_has_access_control (BOOLEAN)
+    - space_iot_sensor_id (VARCHAR)
+    + CAMPOS DE AUDITORÍA
+
+--- NIVEL 4: INVENTARIO (CORE) ---
+
+13. TABLA: actives
+    DESCRIPCIÓN: El objeto físico real.
+    ATRIBUTOS PROPIOS:
+    - active_id (PK, SERIAL)
+    - active_serial_number (VARCHAR, UNIQUE)
+    - active_cost (DECIMAL)
+    - active_purchase_date (DATE)
+    - active_warranty_expiration (DATE)
+    - active_notes (TEXT)
+    - active_barcode (VARCHAR)
+    - active_lifespan_years (INT)
+    + CAMPOS DE AUDITORÍA
+
+--- NIVEL 5: HISTORIAL Y ADJUNTOS ---
+
+14. TABLA: asset_movements
+    DESCRIPCIÓN: Historial de cambios de ubicación/responsable.
+    ATRIBUTOS PROPIOS:
+    - movement_id (PK, SERIAL)
+    - movement_date (TIMESTAMP DEFAULT NOW)
+    - movement_reason (TEXT)
+    + CAMPOS DE AUDITORÍA
+
+15. TABLA: asset_files
+    DESCRIPCIÓN: Documentos adjuntos a un activo.
+    ATRIBUTOS PROPIOS:
+    - file_id (PK, SERIAL)
+    - file_path (VARCHAR)
+    - file_type (VARCHAR)
+    + CAMPOS DE AUDITORÍA
+
+--------------------------------------------------------------------------------
+ORACIONES DE RELACIÓN (PARA CREAR TUS FOREIGN KEYS)
+--------------------------------------------------------------------------------
+
+A. USUARIOS (users)
+- Un Usuario debe tener un Rol (role_id).
+- Un Usuario debe pertenecer a un Departamento (department_id).
+
+B. MODELOS (models)
+- Un Modelo pertenece a una Marca (brand_id).
+
+C. PISOS (floors)
+- Un Piso pertenece a un Edificio (building_id).
+
+D. ESPACIOS (spaces)
+- Un Espacio está ubicado en un Piso (floor_id).
+- Un Espacio es de un Tipo de Espacio (space_type_id).
+
+E. ACTIVOS (actives)
+- Un Activo es de una Categoría (category_id).
+- Un Activo corresponde a un Modelo (model_id).
+- Un Activo fue comprado a un Proveedor (provider_id).
+- Un Activo tiene un Estado (status_id).
+- Un Activo está ubicado en un Espacio (space_id).
+- Un Activo *puede* estar asignado a un Usuario (user_id -> NULLABLE).
+
+F. MOVIMIENTOS (asset_movements)
+- El Movimiento es de un Activo (active_id).
+- El Movimiento sale de un Espacio Origen (from_space_id -> NULLABLE).
+- El Movimiento entra a un Espacio Destino (to_space_id).
+- El Movimiento fue realizado por un Usuario (user_id).
+
+G. ARCHIVOS (asset_files)
+- Un Archivo pertenece a un Activo (active_id).
+
+H. CATEGORÍAS (categories)
+- Una Categoría puede tener una Categoría Padre (category_parent_id -> NULLABLE).
+
+Auditoria->
+created_at
+updated_at
+is_active

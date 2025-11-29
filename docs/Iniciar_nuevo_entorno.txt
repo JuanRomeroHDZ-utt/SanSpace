@@ -1,0 +1,59 @@
+################################################################################
+GUÍA DE CONFIGURACIÓN: INICIAR PROYECTO EN NUEVA MÁQUINA
+Proyecto: SanSpace
+################################################################################
+
+1. PRE-REQUISITOS (Instalar antes de empezar)
+--------------------------------------------------------------------------------
+Asegúrate de tener instalado en la laptop:
+- Python 3.14.0
+- PostgreSQL 18
+- uv (Gestor de paquetes):
+  Windows (PowerShell): powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+  Linux/Mac: curl -LsSf https://astral.sh/uv/install.sh | sh
+- Git
+
+2. CLONAR REPOSITORIO
+--------------------------------------------------------------------------------
+git clone <URL_DE_TU_REPO_GITHUB>
+cd SanSpace
+
+3. RECREAR ENTORNO VIRTUAL Y DEPENDENCIAS
+--------------------------------------------------------------------------------
+Como la carpeta .venv no se sube a Git, debes regenerarla usando 'uv' y el
+archivo 'pyproject.toml' que sí descargaste.
+
+Ejecuta en terminal:
+$ uv sync
+
+(Esto leerá pyproject.toml, creará el entorno virtual e instalará PyQt6, psycopg, etc.)
+
+4. CONFIGURAR VARIABLES DE ENTORNO (.env)
+--------------------------------------------------------------------------------
+El archivo .env NO existe en el repo por seguridad. Créalo manual en la raíz:
+
+1. Crea un archivo llamado: .env
+2. Pega y ajusta tus credenciales locales de la laptop:
+
+DB_NAME=sanspace_db
+DB_USER=postgres
+DB_PASS=TU_PASSWORD_DE_LA_LAPTOP  <-- OJO: Cambia esto
+DB_HOST=localhost
+DB_PORT=5432
+
+5. PREPARAR BASE DE DATOS
+--------------------------------------------------------------------------------
+PostgreSQL en tu laptop está vacío.
+
+1. Abre pgAdmin o tu terminal de Postgres.
+2. Crea la base de datos vacía:
+   CREATE DATABASE sanspace_db;
+3. Ejecuta el script de estructura (si ya lo terminaste):
+   Abre el archivo database/schema.sql y ejecuta el código en el Query Tool.
+
+6. VERIFICAR INSTALACIÓN
+--------------------------------------------------------------------------------
+Intenta ejecutar el entorno para ver si reconoce las librerías:
+$ uv run python --version
+
+Si sale "Python 3.14.x", estás listo.

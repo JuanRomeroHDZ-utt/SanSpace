@@ -1,0 +1,68 @@
+################################################################################
+NOMBRE DEL PROYECTO: SanSpace
+SLOGAN: El Sistema Operativo para Espacios Inteligentes
+ESTADO: Fase 1 (MVP)
+################################################################################
+
+1. EL PROBLEMA: "EL EDIFICIO CIEGO"
+--------------------------------------------------------------------------------
+Imagina una oficina moderna, un coworking o una escuela. Parecen funcionales por fuera, pero por dentro operan en el caos administrativo y técnico:
+
+A. Seguridad Física Arcaica: Siguen usando llaves de metal que se pierden, tarjetas plásticas (RFID) que se clonan fácilmente o libretas de visitas donde cualquiera puede registrar un nombre falso.
+B. Infraestructura Invisible: Si el internet se pone lento, un switch falla o un servidor se sobrecalienta, nadie se entera hasta que los empleados se quejan porque no pueden trabajar. El administrador de TI siempre reacciona tarde (reactivo, no preventivo).
+C. Activos Perdidos: Las empresas compran proyectores, laptops y herramientas que "desaparecen" o se rompen porque nadie sabe dónde están, quién los tiene asignados ni cuándo fue su último mantenimiento.
+
+Hoy en día, estas empresas pagan facturas separadas para alarmas, técnicos de red y software de inventario. Ninguno de estos sistemas se comunica con el otro.
+
+2. LA SOLUCIÓN: SANSPACE
+--------------------------------------------------------------------------------
+SanSpace es una plataforma unificada que dota de un "cerebro" al edificio. Fusionamos el control de quién entra (Seguridad Física), qué utiliza (Inventario de Activos) y cómo navega (Infraestructura de Red) en una sola pantalla centralizada.
+
+No es solo un software de administración; es un ecosistema que convierte una oficina tradicional en un Espacio Inteligente, Seguro y Conectado.
+
+3. FUNCIONALIDADES CLAVE (LAS 3 DIMENSIONES)
+--------------------------------------------------------------------------------
+
+A. Control de Acceso Inteligente (Módulo CloudGate)
+Olvídate de las tarjetas costosas. Con SanSpace, tu celular es tu llave.
+- Generación de Códigos QR dinámicos (rotan cada 30s) para empleados y visitas.
+- Registro exacto de quién entró, a qué hora y a qué sala específica.
+- Revocación de acceso inmediata en caso de despido, sin recuperar llaves físicas.
+
+B. Salud de la Red y Conectividad (Módulos NetHealth & OmniIP)
+SanSpace vigila las "venas digitales" del edificio.
+- Monitoreo 24/7 de Wi-Fi, servidores y enlaces de internet.
+- Detección proactiva: El sistema avisa al técnico sobre latencia alta antes de que inicie una videollamada crítica.
+- Gestión de red: Asigna automáticamente a empleados a la red corporativa y a visitas a la red de invitados al momento de su ingreso.
+
+C. Control de Activos e Infraestructura (Módulo SanStore+)
+Protege la inversión física de la empresa.
+- Mapa digital de activos: Ubicación exacta de cada computadora, proyector o silla.
+- Historial de mantenimiento y asignación de responsables.
+- Trazabilidad: Si se reporta una falla en una sala, el sistema identifica qué equipos están ahí.
+
+4. EL FACTOR DIFERENCIADOR: INTELIGENCIA "INSIGHTFLOW"
+--------------------------------------------------------------------------------
+La verdadera magia ocurre porque todo está conectado. Al centralizar los datos, SanSpace toma decisiones inteligentes (IA) que sistemas aislados no pueden:
+
+- Eficiencia Energética: "Detecto que la Sala B está vacía (vía CloudGate), así que apagaré el Wi-Fi de esa zona y notificaré para apagar el aire acondicionado."
+- Diagnóstico Cruzado: "El internet estuvo lento ayer (NetHealth) debido a que ingresaron 20 visitas no programadas a la red principal (OmniIP)."
+
+5. RESUMEN DE VALOR
+--------------------------------------------------------------------------------
+Para el administrador o dueño del espacio, SanSpace significa:
+1. Ahorro: Elimina la necesidad de pagar 3 o 4 licencias de software diferentes.
+2. Control Total: Visibilidad completa de lo que sucede en la empresa en tiempo real desde una App.
+3. Continuidad Operativa: Reducción drástica de tiempos muertos por fallas técnicas o de seguridad.
+
+SanSpace: Donde la Seguridad Física se encuentra con la Inteligencia Digital.
+
+6. FICHA TÉCNICA (COMPLEMENTO FASE 1)
+--------------------------------------------------------------------------------
+Este proyecto se construirá sobre cimientos sólidos para garantizar su escalabilidad hasta el 9º cuatrimestre:
+
+- Lenguaje Base: Python 3.14.0 (Última generación).
+- Interfaz Gráfica: PyQt6 (Escritorio profesional).
+- Persistencia de Datos: PostgreSQL 18 (Base de datos relacional robusta).
+- Gestión de Paquetes: uv (Velocidad y modernidad).
+- Arquitectura: Modular (MVC) preparada para evolucionar a Microservicios.
