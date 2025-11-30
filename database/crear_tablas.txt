@@ -1,219 +1,328 @@
 ################################################################################
-ESPECIFICACIÓN DE ENTIDADES DE DATOS (SANSPACE)
-Instrucción: Todas las tablas listadas abajo deben incluir OBLIGATORIAMENTE
-los 3 campos de auditoría definidos al inicio.
+ESPECIFICACIÓN DE ENTIDADES DE DATOS (SANSPACE V3.1 - ATÓMICA Y COMPLETA)
+Nota: Se incluyen los campos de auditoría explícitamente en cada tabla.
 ################################################################################
 
---- DEFINICIÓN DE CAMPOS DE AUDITORÍA (ESTÁNDAR) ---
-Al final de CADA tabla, debes agregar estas 3 columnas:
-1. created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
-2. updated_at (TIMESTAMP NULL)
-3. is_active (BOOLEAN DEFAULT TRUE)
+--- NIVEL 0: GEOGRAFÍA Y REGLAS (La base de todo) ---
 
---------------------------------------------------------------------------------
---- NIVEL 1: CATÁLOGOS Y ENTIDADES INDEPENDIENTES ---
+1. TABLA: countries (Países)
+   - country_id (SERIAL)
+   - country_name (VARCHAR 100, Unique)
+   - country_code (VARCHAR 3)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
 
-1. TABLA: roles
-   DESCRIPCIÓN: Define los niveles de autoridad y permisos.
-   ATRIBUTOS PROPIOS:
-   - role_id (PK, SERIAL)
-   - role_name (VARCHAR, UNIQUE)
-   - role_description (TEXT)
+2. TABLA: states (Estados/Provincias)
+   - state_id (SERIAL)
+   - state_name (VARCHAR 100)
+   - state_code (VARCHAR 10)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
+
+3. TABLA: cities (Ciudades)
+   - city_id (SERIAL)
+   - city_name (VARCHAR 100)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
+
+4. TABLA: postal_codes (Códigos Postales)
+   - postal_code_id (SERIAL)
+   - postal_code_number (VARCHAR 10, Unique)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
+
+5. TABLA: addresses (Direcciones Físicas)
+   - address_id (SERIAL)
+   - address_street (VARCHAR 255)
+   - address_exterior_num (VARCHAR 20)
+   - address_interior_num (VARCHAR 20, Nullable)
+   - address_colonia (VARCHAR 100)
+   - address_references (TEXT)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
+
+6. TABLA: rules (Reglas de uso)
+   - rule_id (SERIAL)
+   - rule_name (VARCHAR 100)
+   - rule_description (TEXT)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
+
+--- NIVEL 1: CATÁLOGOS DEL SISTEMA ---
+
+7. TABLA: roles
+   - role_id (SERIAL)
+   - role_name (VARCHAR 50, Unique)
+   - role_description (VARCHAR 255)
    - role_level (INT)
-   - role_permissions (JSON o TEXT)
-   + CAMPOS DE AUDITORÍA
+   - role_permissions (JSON)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
 
-2. TABLA: departments
-   DESCRIPCIÓN: Áreas funcionales de la empresa.
-   ATRIBUTOS PROPIOS:
-   - department_id (PK, SERIAL)
-   - department_name (VARCHAR)
-   - department_manager_name (VARCHAR)
+8. TABLA: departments
+   - department_id (SERIAL)
+   - department_name (VARCHAR 100)
+   - department_manager_name (VARCHAR 150)
    - department_notes (TEXT)
-   + CAMPOS DE AUDITORÍA
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
 
-3. TABLA: brands
-   DESCRIPCIÓN: Fabricantes de hardware/mobiliario.
-   ATRIBUTOS PROPIOS:
-   - brand_id (PK, SERIAL)
-   - brand_name (VARCHAR)
-   - brand_website (VARCHAR)
-   - brand_support_phone (VARCHAR)
-   + CAMPOS DE AUDITORÍA
+9. TABLA: brands
+   - brand_id (SERIAL)
+   - brand_name (VARCHAR 100)
+   - brand_website (VARCHAR 255)
+   - brand_support_phone (VARCHAR 20)
+   - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+   - updated_at (TIMESTAMP NULL)
+   - is_active (BOOLEAN DEFAULT TRUE)
 
-4. TABLA: providers
-   DESCRIPCIÓN: Empresas vendedoras (para garantías).
-   ATRIBUTOS PROPIOS:
-   - provider_id (PK, SERIAL)
-   - provider_name (VARCHAR)
-   - provider_rfc (VARCHAR)
-   - provider_contact_name (VARCHAR)
-   - provider_email (VARCHAR)
-   - provider_phone (VARCHAR)
-   - provider_address (VARCHAR)
-   - provider_city (VARCHAR)
-   - provider_state (VARCHAR)
-   - provider_website (VARCHAR)
-   + CAMPOS DE AUDITORÍA
+10. TABLA: active_statuses
+    - status_id (SERIAL)
+    - status_name (VARCHAR 50)
+    - status_color_hex (VARCHAR 7)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-5. TABLA: active_statuses
-   DESCRIPCIÓN: Estado físico/lógico del activo.
-   ATRIBUTOS PROPIOS:
-   - status_id (PK, SERIAL)
-   - status_name (VARCHAR)
-   - status_color_hex (VARCHAR, ej: '#FF0000')
-   + CAMPOS DE AUDITORÍA
+11. TABLA: space_types
+    - space_type_id (SERIAL)
+    - space_type_name (VARCHAR 50)
+    - space_type_description (VARCHAR 255)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-6. TABLA: space_types
-   DESCRIPCIÓN: Clasificación de espacios.
-   ATRIBUTOS PROPIOS:
-   - space_type_id (PK, SERIAL)
-   - space_type_name (VARCHAR)
-   - space_type_description (TEXT)
-   - space_type_rules (JSON o TEXT)
-   + CAMPOS DE AUDITORÍA
+12. TABLA: iot_protocols
+    - protocol_id (SERIAL)
+    - protocol_name (VARCHAR 50, Unique)
+    - protocol_description (VARCHAR 255)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-7. TABLA: buildings
-   DESCRIPCIÓN: Ubicaciones físicas macro.
-   ATRIBUTOS PROPIOS:
-   - building_id (PK, SERIAL)
-   - building_name (VARCHAR)
-   - building_address (VARCHAR)
-   - building_city (VARCHAR)
-   - building_state (VARCHAR)
-   - building_postal_code (VARCHAR)
-   - building_emergency_contact (VARCHAR)
-   - building_latitude (DECIMAL)
-   - building_longitude (DECIMAL)
-   + CAMPOS DE AUDITORÍA
+13. TABLA: measurement_units
+    - unit_id (SERIAL)
+    - unit_name (VARCHAR 50)
+    - unit_symbol (VARCHAR 10)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-8. TABLA: categories
-   DESCRIPCIÓN: Jerarquía de activos.
-   ATRIBUTOS PROPIOS:
-   - category_id (PK, SERIAL)
-   - category_name (VARCHAR)
-   - category_code (VARCHAR)
-   - category_parent_id (INT, NULLABLE) -> Referencia recursiva
-   + CAMPOS DE AUDITORÍA
+14. TABLA: categories
+    - category_id (SERIAL)
+    - category_name (VARCHAR 100)
+    - category_code (VARCHAR 20)
+    - category_parent_id (INT, Nullable)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
---- NIVEL 2: ENTIDADES DEPENDIENTES ---
+--- NIVEL 2: ENTIDADES PRINCIPALES (Consumen Nivel 0 y 1) ---
 
-9. TABLA: users
-   DESCRIPCIÓN: Personas con acceso o responsables de activos.
-   ATRIBUTOS PROPIOS:
-   - user_id (PK, SERIAL)
-   - user_name (VARCHAR)
-   - user_last_name (VARCHAR)
-   - user_email (VARCHAR, UNIQUE)
-   - user_password_hash (VARCHAR)
-   - user_cellphone (VARCHAR)
-   - user_photo_url (VARCHAR)
-   - user_employee_number (VARCHAR)
-   - user_emergency_contact (JSON o TEXT)
-   + CAMPOS DE AUDITORÍA
+15. TABLA: providers
+    - provider_id (SERIAL)
+    - provider_name (VARCHAR 150)
+    - provider_rfc (VARCHAR 20)
+    - provider_contact_name (VARCHAR 150)
+    - provider_email (VARCHAR 150)
+    - provider_phone (VARCHAR 20)
+    - provider_website (VARCHAR 255)
+    - address_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-10. TABLA: models
-    DESCRIPCIÓN: Modelos específicos de una marca.
-    ATRIBUTOS PROPIOS:
-    - model_id (PK, SERIAL)
-    - model_name (VARCHAR)
+16. TABLA: buildings
+    - building_id (SERIAL)
+    - building_name (VARCHAR 150)
+    - building_emergency_contact (VARCHAR 20)
+    - building_latitude (DECIMAL 10,8)
+    - building_longitude (DECIMAL 11,8)
+    - address_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
+
+17. TABLA: users
+    - user_id (SERIAL)
+    - user_name (VARCHAR 100)
+    - user_last_name (VARCHAR 100)
+    - user_email (VARCHAR 150, Unique)
+    - user_password_hash (VARCHAR 255)
+    - user_cellphone (VARCHAR 20)
+    - user_photo_url (VARCHAR 255)
+    - user_employee_number (VARCHAR 50)
+    - user_emergency_data (JSON)
+    - role_id (INT)
+    - department_id (INT)
+    - address_id (INT, Nullable)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
+
+18. TABLA: iot_sensor_types
+    - sensor_type_id (SERIAL)
+    - sensor_type_name (VARCHAR 100)
+    - sensor_type_datasheet_url (VARCHAR 255)
+    - protocol_id (INT)
+    - unit_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
+
+19. TABLA: models
+    - model_id (SERIAL)
+    - model_name (VARCHAR 100)
     - model_release_year (INT)
-    + CAMPOS DE AUDITORÍA
+    - brand_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-11. TABLA: floors
-    DESCRIPCIÓN: Niveles dentro de un edificio.
-    ATRIBUTOS PROPIOS:
-    - floor_id (PK, SERIAL)
-    - floor_name (VARCHAR)
+--- NIVEL 3: ESTRUCTURA INTERNA Y DISPOSITIVOS ---
+
+20. TABLA: floors
+    - floor_id (SERIAL)
+    - floor_name (VARCHAR 50)
     - floor_number (INT)
-    + CAMPOS DE AUDITORÍA
+    - building_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
---- NIVEL 3: ESPACIOS ---
+21. TABLA: iot_sensors
+    - iot_sensor_id (SERIAL)
+    - iot_sensor_name (VARCHAR 100)
+    - iot_sensor_serial (VARCHAR 100, Unique)
+    - iot_sensor_ip (VARCHAR 45)
+    - iot_sensor_mac (VARCHAR 17)
+    - iot_sensor_api_endpoint (VARCHAR 255)
+    - sensor_type_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-12. TABLA: spaces
-    DESCRIPCIÓN: Habitaciones o áreas específicas.
-    ATRIBUTOS PROPIOS:
-    - space_id (PK, SERIAL)
-    - space_name (VARCHAR)
-    - space_code (VARCHAR, UNIQUE)
+22. TABLA: space_type_rules (Tabla Intermedia)
+    - space_rule_id (SERIAL)
+    - space_type_id (INT)
+    - rule_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
+
+--- NIVEL 4: ESPACIOS E INVENTARIO CORE ---
+
+23. TABLA: spaces
+    - space_id (SERIAL)
+    - space_name (VARCHAR 100)
+    - space_code (VARCHAR 20, Unique)
     - space_capacity (INT)
-    - space_square_meters (DECIMAL)
+    - space_square_meters (DECIMAL 10,2)
     - space_has_access_control (BOOLEAN)
-    - space_iot_sensor_id (VARCHAR)
-    + CAMPOS DE AUDITORÍA
+    - floor_id (INT)
+    - space_type_id (INT)
+    - iot_sensor_id (INT, Nullable)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
---- NIVEL 4: INVENTARIO (CORE) ---
-
-13. TABLA: actives
-    DESCRIPCIÓN: El objeto físico real.
-    ATRIBUTOS PROPIOS:
-    - active_id (PK, SERIAL)
-    - active_serial_number (VARCHAR, UNIQUE)
-    - active_cost (DECIMAL)
+24. TABLA: actives
+    - active_id (SERIAL)
+    - active_serial_number (VARCHAR 100, Unique)
+    - active_cost (DECIMAL 15,2)
     - active_purchase_date (DATE)
     - active_warranty_expiration (DATE)
     - active_notes (TEXT)
-    - active_barcode (VARCHAR)
+    - active_barcode (VARCHAR 100)
     - active_lifespan_years (INT)
-    + CAMPOS DE AUDITORÍA
+    - category_id (INT)
+    - model_id (INT)
+    - provider_id (INT)
+    - status_id (INT)
+    - space_id (INT)
+    - user_id (INT, Nullable)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
---- NIVEL 5: HISTORIAL Y ADJUNTOS ---
+--- NIVEL 5: TRANSACCIONAL ---
 
-14. TABLA: asset_movements
-    DESCRIPCIÓN: Historial de cambios de ubicación/responsable.
-    ATRIBUTOS PROPIOS:
-    - movement_id (PK, SERIAL)
-    - movement_date (TIMESTAMP DEFAULT NOW)
+25. TABLA: asset_movements
+    - movement_id (SERIAL)
+    - movement_date (TIMESTAMP)
     - movement_reason (TEXT)
-    + CAMPOS DE AUDITORÍA
+    - active_id (INT)
+    - from_space_id (INT, Nullable)
+    - to_space_id (INT)
+    - user_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
-15. TABLA: asset_files
-    DESCRIPCIÓN: Documentos adjuntos a un activo.
-    ATRIBUTOS PROPIOS:
-    - file_id (PK, SERIAL)
-    - file_path (VARCHAR)
-    - file_type (VARCHAR)
-    + CAMPOS DE AUDITORÍA
+26. TABLA: asset_files
+    - file_id (SERIAL)
+    - file_path (VARCHAR 255)
+    - file_type (VARCHAR 10)
+    - active_id (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
 
---------------------------------------------------------------------------------
-ORACIONES DE RELACIÓN (PARA CREAR TUS FOREIGN KEYS)
---------------------------------------------------------------------------------
+--- ORACIONES DE RELACIÓN (Para tus FKs) ---
 
-A. USUARIOS (users)
-- Un Usuario debe tener un Rol (role_id).
-- Un Usuario debe pertenecer a un Departamento (department_id).
+A. GEOGRAFÍA
+   - Un Estado pertenece a un País.
+   - Una Ciudad pertenece a un Estado.
+   - Un Código Postal pertenece a una Ciudad.
+   - Una Dirección está asociada a un Código Postal.
 
-B. MODELOS (models)
-- Un Modelo pertenece a una Marca (brand_id).
+B. ENTIDADES CON DIRECCIÓN (Atomicidad)
+   - Un Edificio se ubica en una Dirección.
+   - Un Proveedor tiene una Dirección fiscal.
+   - Un Usuario tiene una Dirección de domicilio (Opcional).
 
-C. PISOS (floors)
-- Un Piso pertenece a un Edificio (building_id).
+C. USUARIOS Y ORGANIZACIÓN
+   - Un Usuario tiene asignado un Rol.
+   - Un Usuario trabaja en un Departamento.
 
-D. ESPACIOS (spaces)
-- Un Espacio está ubicado en un Piso (floor_id).
-- Un Espacio es de un Tipo de Espacio (space_type_id).
+D. IoT (SENSORES)
+   - Un Tipo de Sensor usa un Protocolo.
+   - Un Tipo de Sensor mide en una Unidad.
+   - Un Sensor IoT es una instancia de un Tipo de Sensor.
 
-E. ACTIVOS (actives)
-- Un Activo es de una Categoría (category_id).
-- Un Activo corresponde a un Modelo (model_id).
-- Un Activo fue comprado a un Proveedor (provider_id).
-- Un Activo tiene un Estado (status_id).
-- Un Activo está ubicado en un Espacio (space_id).
-- Un Activo *puede* estar asignado a un Usuario (user_id -> NULLABLE).
+E. MODELOS Y MARCAS
+   - Un Modelo es fabricado por una Marca.
 
-F. MOVIMIENTOS (asset_movements)
-- El Movimiento es de un Activo (active_id).
-- El Movimiento sale de un Espacio Origen (from_space_id -> NULLABLE).
-- El Movimiento entra a un Espacio Destino (to_space_id).
-- El Movimiento fue realizado por un Usuario (user_id).
+F. ESTRUCTURA DEL EDIFICIO
+   - Un Piso pertenece a un Edificio.
+   - Un Espacio se encuentra dentro de un Piso.
+   - Un Espacio se clasifica por un Tipo de Espacio.
+   - Un Espacio puede tener asignado un Sensor IoT (Opcional/Unique).
 
-G. ARCHIVOS (asset_files)
-- Un Archivo pertenece a un Activo (active_id).
+G. REGLAS DE ESPACIO (Muchos a Muchos)
+   - Un Tipo de Espacio puede tener muchas Reglas asociadas (Tabla intermedia space_type_rules).
 
-H. CATEGORÍAS (categories)
-- Una Categoría puede tener una Categoría Padre (category_parent_id -> NULLABLE).
+H. INVENTARIO (ACTIVOS)
+   - Un Activo pertenece a una Categoría.
+   - Un Activo corresponde a un Modelo.
+   - Un Activo fue comprado a un Proveedor.
+   - Un Activo tiene un Estado actual.
+   - Un Activo está ubicado en un Espacio.
+   - Un Activo puede estar asignado a un Usuario.
 
-Auditoria->
-created_at
-updated_at
-is_active
+I. HISTORIAL Y ARCHIVOS
+   - Un Movimiento pertenece a un Activo.
+   - Un Movimiento registra Espacio Origen (nullable) y Destino.
+   - Un Movimiento registra al Usuario que hizo el cambio.
+   - Un Archivo pertenece a un Activo.
+
+J. RECURSIVIDAD
+   - Una Categoría puede tener una Categoría Padre (Nullable).
