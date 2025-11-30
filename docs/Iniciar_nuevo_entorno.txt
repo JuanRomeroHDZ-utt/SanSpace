@@ -1,59 +1,77 @@
 ################################################################################
 GUÍA DE CONFIGURACIÓN: INICIAR PROYECTO EN NUEVA MÁQUINA
 Proyecto: SanSpace
+Versión Doc: 1.1 (Actualizado con Automatización de BD)
 ################################################################################
 
 1. PRE-REQUISITOS (Instalar antes de empezar)
 --------------------------------------------------------------------------------
-Asegúrate de tener instalado en la laptop:
-- Python 3.14.0
-- PostgreSQL 18
-- uv (Gestor de paquetes):
+Asegúrate de tener instalado en la laptop o PC nueva:
+- Python 3.14.0 (Asegurar que esté en el PATH)
+- PostgreSQL 18 (El servicio debe estar corriendo y debes saber la clave de superusuario)
+- uv (Gestor de paquetes moderno):
   Windows (PowerShell): powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
   Linux/Mac: curl -LsSf https://astral.sh/uv/install.sh | sh
-- Git
+- Git (Para clonar el repositorio)
 
 2. CLONAR REPOSITORIO
 --------------------------------------------------------------------------------
-git clone <URL_DE_TU_REPO_GITHUB>
+Abre tu terminal en la carpeta donde guardas tus proyectos y ejecuta:
+
+git clone <URL-SanSpace>
 cd SanSpace
 
 3. RECREAR ENTORNO VIRTUAL Y DEPENDENCIAS
 --------------------------------------------------------------------------------
-Como la carpeta .venv no se sube a Git, debes regenerarla usando 'uv' y el
-archivo 'pyproject.toml' que sí descargaste.
+Como la carpeta .venv (entorno virtual) no se sube a Git por reglas de ignorado,
+debes regenerarla usando 'uv' y el archivo 'pyproject.toml' que sí descargaste.
 
-Ejecuta en terminal:
+Ejecuta en la terminal dentro de la carpeta SanSpace:
 $ uv sync
 
-(Esto leerá pyproject.toml, creará el entorno virtual e instalará PyQt6, psycopg, etc.)
+(Esto leerá pyproject.toml, creará el entorno virtual .venv e instalará 
+automáticamente PyQt6, psycopg, python-dotenv y cualquier otra librería necesaria).
 
 4. CONFIGURAR VARIABLES DE ENTORNO (.env)
 --------------------------------------------------------------------------------
-El archivo .env NO existe en el repo por seguridad. Créalo manual en la raíz:
+El archivo .env NO existe en el repositorio por seguridad (contiene contraseñas).
+Debes crearlo manualmente en la raíz del proyecto.
 
-1. Crea un archivo llamado: .env
-2. Pega y ajusta tus credenciales locales de la laptop:
+1. Crea un archivo nuevo llamado: .env (sin nombre, solo la extensión).
+2. Pega el siguiente contenido y ajusta la contraseña local de TU laptop:
 
 DB_NAME=sanspace_db
-DB_USER=postgres
-DB_PASS=TU_PASSWORD_DE_LA_LAPTOP  <-- OJO: Cambia esto
+DB_USER=sanspace_dev
+DB_PASS=sanspace_dev
 DB_HOST=localhost
 DB_PORT=5432
 
-5. PREPARAR BASE DE DATOS
---------------------------------------------------------------------------------
-PostgreSQL en tu laptop está vacío.
+*Nota: Estas credenciales (sanspace_dev) son las que usará la aplicación. 
+El script de instalación del paso siguiente creará este usuario por ti.*
 
-1. Abre pgAdmin o tu terminal de Postgres.
-2. Crea la base de datos vacía:
-   CREATE DATABASE sanspace_db;
-3. Ejecuta el script de estructura (si ya lo terminaste):
-   Abre el archivo database/schema.sql y ejecuta el código en el Query Tool.
+5. PREPARAR BASE DE DATOS (MÉTODO AUTOMATIZADO)
+--------------------------------------------------------------------------------
+Ya no es necesario crear nada manualmente en pgAdmin o SQL Shell. Hemos creado 
+un script en Python que realiza todo el aprovisionamiento (Usuario, BD y Tablas).
+
+1. Asegúrate de saber la contraseña de tu superusuario local 'postgres'.
+2. Ejecuta el script de inicialización desde la raíz del proyecto:
+
+   $ uv run src/scripts/init_db.py
+
+3. El script te pedirá la contraseña de 'postgres' en la terminal y realizará:
+   - Creación del usuario (role) definido en tu .env (si no existe).
+   - Asignación de permisos de creación de BD.
+   - Creación de la base de datos 'sanspace_db' (si no existe).
+   - Lectura del archivo database/schema.sql.
+   - Ejecución del SQL para crear las 26 tablas y sus relaciones.
+
+Si ves el mensaje "✅ Tablas creadas exitosamente", todo está listo.
 
 6. VERIFICAR INSTALACIÓN
 --------------------------------------------------------------------------------
-Intenta ejecutar el entorno para ver si reconoce las librerías:
+Intenta ejecutar el entorno para ver si reconoce las librerías instaladas:
+
 $ uv run python --version
 
-Si sale "Python 3.14.x", estás listo.
+Si sale "Python 3.14.x", tu entorno está configurado correctamente.

@@ -243,15 +243,16 @@ Nota: Se incluyen los campos de auditoría explícitamente en cada tabla.
     - active_notes (TEXT)
     - active_barcode (VARCHAR 100)
     - active_lifespan_years (INT)
+    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
+    - updated_at (TIMESTAMP NULL)
+    - is_active (BOOLEAN DEFAULT TRUE)
+
     - category_id (INT)
     - model_id (INT)
     - provider_id (INT)
     - status_id (INT)
     - space_id (INT)
     - user_id (INT, Nullable)
-    - created_at (TIMESTAMP DEFAULT NOW() NOT NULL)
-    - updated_at (TIMESTAMP NULL)
-    - is_active (BOOLEAN DEFAULT TRUE)
 
 --- NIVEL 5: TRANSACCIONAL ---
 

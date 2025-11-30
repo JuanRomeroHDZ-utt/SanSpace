@@ -9,11 +9,14 @@ load_dotenv()
 #  Rutas del proyecto
 # -------------------------
 
-# Subir 2 niveles para llegar a la carpeta raíz "sanspace/"
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Ruta completa a /database/schema.sql
-SCHEMA_PATH = os.path.join(BASE_DIR, "database", "schema.sql")
+import os
+
+# Carpeta del script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Ruta a schema.sql
+SCHEMA_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "database", "schema.sql"))
 
 def create_database_structure():
     print('🚀 Iniciando configuración de SanSpace DB...\n')
