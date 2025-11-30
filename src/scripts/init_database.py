@@ -1,16 +1,10 @@
 import os
 import psycopg
 from dotenv import load_dotenv
+from src.scripts.seed_data import SanSpaceSeeder
 
 # Cargar variables del archivo .env
 load_dotenv()
-
-# -------------------------
-#  Rutas del proyecto
-# -------------------------
-
-
-import os
 
 # Carpeta del script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -63,5 +57,12 @@ def create_database_structure():
     except Exception as e:
         print(f"❌ Error al crear tablas: {e}")
 
+    # -------------------------------------------------
+    # Paso 3 → Llenar las tablas con seeds del archivo src/scripts/seed_data.py
+    # -------------------------------------------------
+    seed = SanSpaceSeeder()
+    seed.run()
+
 if __name__ == "__main__":
     create_database_structure()
+    print('Contraseña del usuario de la base de datos: sanspace_dev')

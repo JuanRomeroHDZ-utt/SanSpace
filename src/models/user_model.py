@@ -73,6 +73,50 @@ class UserModel:
         except Exception as e:
             print(f'Error en create_users: {e}')
             return None
-#? Prueba de read
-a = UserModel()
-print(a.read_users())
+
+    def get_user_by_email(self, email):
+        try:
+            with self.db.get_connection() as conexion:
+                with conexion.cursor() as cursor:
+                    query_get_user_by_email = """
+                    SELECT users.user_id, users.user_name, users.user_last_name, users.user_email, users.user_password_hashed, users.user_cellphone, users.user_employee_number, users.user_emergency_data, roles.role_name, departments.department_name, addresses.address_street
+                    FROM users
+                    INNER JOIN roles ON users.role_id = roles.role_id
+                    INNER JOIN departments ON users.department_id = departments.department_id
+                    INNER JOIN addresses ON users.address_id = addresses.address_id
+                    WHERE users.user_email = %s;
+                    """
+                    cursor.execute(query_get_user_by_email, (email, ))
+                    return cursor.fetchone()
+        except Exception as e:
+            print(f'Error en get_user_by_email: {e}')
+            return None
+
+
+if __name__ == '__main__':
+    #? Prueba de read
+    # a = UserModel()
+    # print(a.read_users())
+
+    #? Ejemplo de crear usuario
+    # user_data = (
+    #     'Maria',  # user_name
+    #     'López',  # user_last_name
+    #     'maria.lopez@sanspace.com',  # user_email
+    #     'hash456',  # user_password_hashed
+    #     '664-234-5678',  # user_cellphone
+    #     'https://sanspace.com/photos/maria.jpg',  # user_photo_url
+    #     'EMP-002',  # user_employee_number
+    #     json.dumps({"emergency_contact": "Carlos López", "emergency_phone": "664-876-5432"}),  # user_emergency_data
+    #     2,  # role_id
+    #     2,  # department_id
+    #     2   # address_id
+    # )
+
+    #? Prueba de busqueda por email
+    # user = a.get_user_by_email('maria.lopez@sanspace.com')
+    # if user:
+    #     print(f"Usuario encontrado: {user['user_name']} {user['user_last_name']}")
+    # else:
+    #     print("Usuario no encontrado")
+    pass
