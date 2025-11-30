@@ -20,9 +20,9 @@ class SanSpaceSeeder:
         except Exception as e:
             print(f'Error en {level_name}: {e}')
 
-    #! ---------------------------------------------------
+    #! ---------------------------------------------------------
     #! NIVEL 0 -> Geografia y reglas (base)
-    #! ---------------------------------------------------
+    #! ---------------------------------------------------------
     def seed_level_cero_geografia(self):
         # 1. Paises
         query_countries = "INSERT INTO countries (country_name, country_code) VALUES (%s, %s)"
@@ -57,3 +57,10 @@ class SanSpaceSeeder:
             self._execute_batch(query_rules, data_rules, "Reglas")
         )
         return success
+
+    #! ---------------------------------------------------------
+    #! NIVEL 1: CATÁLOGOS (La base de la operación)
+    #! ---------------------------------------------------------
+    def seed_level_one_catalogs(self):
+        """ CONTINUAR CON LA SEED """
+        pass
