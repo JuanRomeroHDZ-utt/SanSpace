@@ -5,20 +5,23 @@ class UserModel:
     def __init__(self):
         self.db = DatabaseConnection()
 
-    def read_users(self):
+    def get_user_by_email(self, email):
         try:
             with self.db.get_connection() as conexion:
                 with conexion.cursor() as cursor:
-                    query_read_users = """
-                    SELECT *
+                    query_get_user_by_email = """
+                    SELECT users.user_id, users.user_name, users.user_last_name, users.user_email, users.user_password_hashed, users.user_cellphone, users.user_employee_number, users.user_emergency_data, roles.role_name, departments.department_name, addresses.address_street
                     FROM users
-                    WHERE user_is_active = TRUE
-                    ORDER BY user_id
+                    INNER JOIN roles ON users.role_id = roles.role_id
+                    INNER JOIN departments ON users.department_id = departments.department_id
+                    INNER JOIN addresses ON users.address_id = addresses.address_id
+                    WHERE users.user_email = %s;
                     """
-                    cursor.execute(query_read_users)
-                    return cursor.fetchall()
+                    cursor.execute(query_get_user_by_email, (email, ))
+                    return cursor.fetchone()
         except Exception as e:
-            print(f'Error en read_users: {e}')
+            print(f'Error en get_user_by_email: {e}')
+            return None
 
     def create_users(self, user_name, user_last_name, user_email, user_password_hashed, user_cellphone, user_photo_url, user_employee_number, user_emergency_data, role_id, department_id, address_id):
         try:
@@ -74,23 +77,29 @@ class UserModel:
             print(f'Error en create_users: {e}')
             return None
 
-    def get_user_by_email(self, email):
+    def read_users(self):
         try:
             with self.db.get_connection() as conexion:
                 with conexion.cursor() as cursor:
-                    query_get_user_by_email = """
-                    SELECT users.user_id, users.user_name, users.user_last_name, users.user_email, users.user_password_hashed, users.user_cellphone, users.user_employee_number, users.user_emergency_data, roles.role_name, departments.department_name, addresses.address_street
+                    query_read_users = """
+                    SELECT *
                     FROM users
-                    INNER JOIN roles ON users.role_id = roles.role_id
-                    INNER JOIN departments ON users.department_id = departments.department_id
-                    INNER JOIN addresses ON users.address_id = addresses.address_id
-                    WHERE users.user_email = %s;
+                    WHERE user_is_active = TRUE
+                    ORDER BY user_id
                     """
-                    cursor.execute(query_get_user_by_email, (email, ))
-                    return cursor.fetchone()
+                    cursor.execute(query_read_users)
+                    return cursor.fetchall()
         except Exception as e:
-            print(f'Error en get_user_by_email: {e}')
-            return None
+            print(f'Error en read_users: {e}')
+
+    def update_users(self, user_id, user_name, user_last_name, user_cellphone, role_id, department_id):
+        try:
+            with self.db.get_connection() as conexion:
+                with conexion.cursor() as cursor:
+                    pass #! Continuar
+        except Exception as e:
+            pass #! Continuar
+
 
 if __name__ == '__main__':
     #! Descomentar si se quiere hacer algo
