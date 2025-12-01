@@ -92,13 +92,13 @@ class UserModel:
             print(f'Error en get_user_by_email: {e}')
             return None
 
-
 if __name__ == '__main__':
-    #? Prueba de read
+    #! Descomentar si se quiere hacer algo
     # a = UserModel()
+    #? Prueba de read
     # print(a.read_users())
 
-    #? Ejemplo de crear usuario
+    #? Ejemplo de crear usuario -> Ya en la base de datos, cambiar valores
     # user_data = (
     #     'Maria',  # user_name
     #     'López',  # user_last_name

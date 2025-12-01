@@ -1,8 +1,8 @@
 # 🏢 SanSpace
 **El Sistema Operativo para Espacios Inteligentes**
 
-> **Estado:** Fase 1 (Infraestructura de Datos Automatizada y Poblada)
-> **Versión:** 0.1.2
+> **Estado:** Fase 2 (Lógica de Negocio y Autenticación)
+> **Versión:** 0.1.3
 
 ## 📖 Visión del Proyecto
 SanSpace es una plataforma unificada diseñada para administrar "Edificios Inteligentes" (Oficinas, Coworkings, Escuelas). Fusiona tres pilares operativos en una sola interfaz para resolver el problema del "Edificio Ciego":
@@ -77,6 +77,11 @@ La lógica del sistema se organiza bajo los siguientes módulos:
   * `seed_data.py`: Lógica de inserción de datos de prueba y catálogos (invocado por el init).
 * **`src/utils/`**: Herramientas transversales.
   * `connection_database.py`: Singleton para gestión eficiente de conexiones PostgreSQL.
+  * `security.py`: Wrapper para encriptación Argon2 (Hashing y Verificación).
+* **`src/models/`**: Acceso a Datos (DAO).
+  * `user_model.py`: CRUD y gestión de usuarios (SQL).
+* **`src/controllers/`**: Lógica de Negocio.
+  * `auth_controller.py`: Gestión de Login y validación de credenciales.
 * **`database/`**:
   * `schema.sql`: Definición DDL de las 26 tablas y relaciones del sistema.
 

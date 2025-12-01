@@ -1,5 +1,5 @@
 from src.utils.connection_database import DatabaseConnection
-
+from src.utils.security import Security
 class SanSpaceSeeder:
     def __init__(self):
         self.db = DatabaseConnection()
@@ -123,9 +123,12 @@ class SanSpaceSeeder:
         query_buildings = """INSERT INTO buildings (building_name, building_emergency_contact, building_latitude, building_longitude, address_id) VALUES (%s,%s,%s,%s,%s)"""
         data_buildings = [('Torre SanSpace', 'Juan Velador', 10.0, 10.0, 1)]
 
+        password_real_uno = Security.hash_password('1234')
+        password_real_two = Security.hash_password('4321')
+        password_real_three = Security.hash_password('1423')
         # 17. Usuarios
         query_users = """INSERT INTO users (user_name, user_last_name, user_email, user_password_hashed, user_cellphone, user_photo_url, user_employee_number, user_emergency_data, role_id, department_id, address_id) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-        data_users = [('Admin', 'Supremo', 'admin@sanspace.com', 'hash123', '664111', 'url', '001', '{}', 1, 1, 3),('Pedro', 'Pérez', 'pedro@sanspace.com', 'hash123', '664222', 'url', '002', '{}', 4, 3, 3),('Maria', 'López', 'maria@sanspace.com', 'hash123', '664333', 'url', '003', '{}', 3, 2, 3)]
+        data_users = [('Admin', 'Supremo', 'admin@sanspace.com', password_real_uno, '664111', 'url', '001', '{}', 1, 1, 3),('Pedro', 'Pérez', 'pedro@sanspace.com', password_real_two, '664222', 'url', '002', '{}', 4, 3, 3),('Maria', 'López', 'maria@sanspace.com', password_real_three, '664333', 'url', '003', '{}', 3, 2, 3)]
 
         # 18. Tipos de sensores IOT
         query_iot_sensor_types = """INSERT INTO iot_sensor_types(iot_sensor_type_name, iot_sensor_type_datasheet_url, iot_protocol_id, measurement_unit_id) VALUES (%s,%s,%s,%s)"""
