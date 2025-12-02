@@ -96,13 +96,74 @@ class UserModel:
         try:
             with self.db.get_connection() as conexion:
                 with conexion.cursor() as cursor:
-                    pass #! Continuar
-        except Exception as e:
-            pass #! Continuar
+                    query_update_users = """
+                    UPDATE users
+                    SET user_name = %s, user_last_name = %s, user_cellphone = %s, role_id = %s, department_id =%s
+                    WHERE user_id = %s
+                    RETURNING user_id;
+                    """
 
+                    values = (
+                        user_name,
+                        user_last_name,
+                        user_cellphone,
+                        role_id,
+                        department_id,
+                        user_id
+                    )
+                    cursor.execute(query_update_users, values)
+                    updated = cursor.fetchone()
+                    if not updated:
+                        raise Exception('Error en user_id')
+                    return True
+        except Exception as e:
+            print(f'Error en update_users: {e}')
+            return False
+
+    def delete_users(self, user_id):
+        try:
+            with self.db.get_connection() as conexion:
+                with conexion.cursor() as cursor:
+                    query_delete_users = """
+                    UPDATE users
+                    SET user_is_active = False
+                    WHERE user_id = %s
+                    RETURNING user_id;
+                    """
+                    cursor.execute(query_delete_users, (user_id, ))
+                    delete = cursor.fetchone()
+                    if not delete:
+                        # raise Exception ('El usuario se encuentra inactivo o no existe')
+                        return False
+                    return True
+        except Exception as e:
+            print(f'Error en delete_users: {e}')
+            return False
+
+class DepartmentModel:
+    def __init__(self):
+        self.db = DatabaseConnection()
+
+    def get_active_departments(self):
+        try:
+            with self.db.get_connection() as conexion:
+                with conexion.cursor() as cursor:
+                    query_get_active_departments = """
+                    SELECT department_id, department_name
+                    FROM departments
+                    WHERE department_is_active = TRUE;
+                    """
+                    cursor.execute(query_get_active_departments)
+                    active = cursor.fetchall()
+                    if not active:
+                        raise Exception ('No hay ninguno activo')
+                    return active
+        except Exception as e:
+            print(f'Error en get_active_departments: {e}')
+            return False
 
 if __name__ == '__main__':
-    #! Descomentar si se quiere hacer algo
+    #! Descomentar si se quiere probar la clase: UserModel
     # a = UserModel()
     #? Prueba de read
     # print(a.read_users())
@@ -122,10 +183,17 @@ if __name__ == '__main__':
     #     2   # address_id
     # )
 
-    #? Prueba de busqueda por email
+    #? Prueba de get_user_by_email
     # user = a.get_user_by_email('maria.lopez@sanspace.com')
     # if user:
     #     print(f"Usuario encontrado: {user['user_name']} {user['user_last_name']}")
     # else:
     #     print("Usuario no encontrado")
+
+    #! Descomentar si se quiere probar la clase: DepartmentModel
+    b = DepartmentModel()
+
+    #? Prueba de get_active_departments
+    # print(b.get_active_departments())
+
     pass
