@@ -1,8 +1,8 @@
 # 🏢 SanSpace
 **El Sistema Operativo para Espacios Inteligentes**
 
-> **Estado:** Fase 2 (Lógica de Negocio y Autenticación)
-> **Versión:** 0.1.3
+> **Estado:** Fase 3 (Interfaz Gráfica y Arquitectura MVC Completa)
+> **Versión:** 0.1.4
 
 ## 📖 Visión del Proyecto
 SanSpace es una plataforma unificada diseñada para administrar "Edificios Inteligentes" (Oficinas, Coworkings, Escuelas). Fusiona tres pilares operativos en una sola interfaz para resolver el problema del "Edificio Ciego":
@@ -17,7 +17,7 @@ El objetivo es eliminar la gestión fragmentada (Excel, llaves físicas, sistema
 Este proyecto está construido con estándares modernos para garantizar su escalabilidad hasta el final de la carrera:
 
 * **Lenguaje:** Python 3.14.0
-* **Interfaz Gráfica:** PyQt6 (Desktop)
+* **Interfaz Gráfica:** PySide6 (Qt for Python) + Qt Designer
 * **Base de Datos:** PostgreSQL 18 (Arquitectura Normalizada 4FN)
 * **Gestión de Paquetes:** uv (Modern Python Packaging)
 * **Arquitectura:** Modular (MVC - Model View Controller)
@@ -35,7 +35,7 @@ Este proyecto está construido con estándares modernos para garantizar su escal
     git clone <URL_DEL_REPOSITORIO>
     cd SanSpace
 
-    # 2. Instalar dependencias y crear entorno virtual
+    # 2. Instalar dependencias (Incluye PySide6, Argon2, Psycopg)
     uv sync
 
     # 3. Configurar secretos
@@ -70,18 +70,28 @@ Si el comando anterior falla (error de ruta o módulo no encontrado), prueba est
 * `assets/`: Recursos gráficos e iconos.
 
 ### 5. Arquitectura del Código (Source)
-La lógica del sistema se organiza bajo los siguientes módulos:
+La lógica del sistema se organiza bajo el patrón MVC:
 
 * **`src/scripts/`**: Automatización y mantenimiento.
   * `init_database.py`: Orquestador maestro. Prepara la BD y ejecuta internamente el `seed_data.py`.
-  * `seed_data.py`: Lógica de inserción de datos de prueba y catálogos (invocado por el init).
+  * `seed_data.py`: Lógica de inserción de datos de prueba y catálogos.
+  
 * **`src/utils/`**: Herramientas transversales.
   * `connection_database.py`: Singleton para gestión eficiente de conexiones PostgreSQL.
   * `security.py`: Wrapper para encriptación Argon2 (Hashing y Verificación).
+
 * **`src/models/`**: Acceso a Datos (DAO).
-  * `user_model.py`: CRUD y gestión de usuarios (SQL).
+  * `user_model.py`: CRUD y gestión de usuarios (SQL puro).
+  * `catalog_model.py`: Consultas de lectura para Roles, Departamentos, etc.
+
 * **`src/controllers/`**: Lógica de Negocio.
   * `auth_controller.py`: Gestión de Login y validación de credenciales.
+  * `user_controller.py`: Validaciones de negocio para crear/editar usuarios.
+
+* **`src/views/`**: Interfaz Gráfica (Frontend Desktop).
+  * `login_view.py`: Lógica de la ventana de acceso.
+  * `ui/`: Archivos generados por Qt Designer (`.ui` y `_ui.py`).
+
 * **`database/`**:
   * `schema.sql`: Definición DDL de las 26 tablas y relaciones del sistema.
 
