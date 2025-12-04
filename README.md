@@ -75,7 +75,7 @@ La lógica del sistema se organiza bajo el patrón MVC:
 * **`src/scripts/`**: Automatización y mantenimiento.
   * `init_database.py`: Orquestador maestro. Prepara la BD y ejecuta internamente el `seed_data.py`.
   * `seed_data.py`: Lógica de inserción de datos de prueba y catálogos.
-  
+
 * **`src/utils/`**: Herramientas transversales.
   * `connection_database.py`: Singleton para gestión eficiente de conexiones PostgreSQL.
   * `security.py`: Wrapper para encriptación Argon2 (Hashing y Verificación).
