@@ -22,7 +22,7 @@ class LoginView(QMainWindow):
 
         if not email or not password:
             QMessageBox.warning(self, 'Faltan datos', 'Faltan datos')
-
+            return
         user = self.auth_controller.login(email, password)
 
         if user:
